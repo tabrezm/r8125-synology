@@ -46,6 +46,12 @@ $ cd /usr/src/r8125
 $ git clone https://github.com/tabrezm/r8125-synology
 ```
 
+If you're compiling for a different DSM version, you need to update `BASEDIR` in the makefile:
+
+```
+	BASEDIR := /usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-7.2
+```
+
 6. Compile module:
 
 ```bash
