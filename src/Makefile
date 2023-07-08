@@ -40,6 +40,10 @@ ENABLE_S5_KEEP_CURR_MAC = n
 ENABLE_EEE = y
 ENABLE_S0_MAGIC_PACKET = n
 ENABLE_TX_NO_CLOSE = y
+ENABLE_MULTIPLE_TX_QUEUE = n
+ENABLE_PTP_SUPPORT = n
+ENABLE_RSS_SUPPORT = n
+ENABLE_LIB_SUPPORT = n
 
 ifneq ($(KERNELRELEASE),)
 	obj-m := r8125.o
@@ -48,15 +52,15 @@ ifneq ($(KERNELRELEASE),)
 		EXTRA_CFLAGS += -DCONFIG_SOC_LAN
 	endif
 	ifeq ($(ENABLE_REALWOW_SUPPORT), y)
-	    r8125-objs += r8125_realwow.o
+		r8125-objs += r8125_realwow.o
 		EXTRA_CFLAGS += -DENABLE_REALWOW_SUPPORT
 	endif
 	ifeq ($(ENABLE_DASH_SUPPORT), y)
-	    r8125-objs += r8125_dash.o
+		r8125-objs += r8125_dash.o
 		EXTRA_CFLAGS += -DENABLE_DASH_SUPPORT
 	endif
 	ifeq ($(ENABLE_DASH_PRINTER_SUPPORT), y)
-	    r8125-objs += r8125_dash.o
+		r8125-objs += r8125_dash.o
 		EXTRA_CFLAGS += -DENABLE_DASH_SUPPORT -DENABLE_DASH_PRINTER_SUPPORT
 	endif
 	EXTRA_CFLAGS += -DCONFIG_R8125_NAPI
@@ -81,6 +85,21 @@ ifneq ($(KERNELRELEASE),)
 	endif
 	ifeq ($(ENABLE_TX_NO_CLOSE), y)
 		EXTRA_CFLAGS += -DENABLE_TX_NO_CLOSE
+	endif
+	ifeq ($(ENABLE_MULTIPLE_TX_QUEUE), y)
+		EXTRA_CFLAGS += -DENABLE_MULTIPLE_TX_QUEUE
+	endif
+	ifeq ($(ENABLE_PTP_SUPPORT), y)
+		r8125-objs += r8125_ptp.o
+		EXTRA_CFLAGS += -DENABLE_PTP_SUPPORT
+	endif
+	ifeq ($(ENABLE_RSS_SUPPORT), y)
+		r8125-objs += r8125_rss.o
+		EXTRA_CFLAGS += -DENABLE_RSS_SUPPORT
+	endif
+	ifeq ($(ENABLE_LIB_SUPPORT), y)
+		r8125-objs += r8125_lib.o
+		EXTRA_CFLAGS += -DENABLE_LIB_SUPPORT
 	endif
 else
 	BASEDIR := /usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-7.2
