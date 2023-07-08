@@ -99,4 +99,5 @@ $ depmod -a # warnings are safe to ignore
 
 ## Change log
 
+- 2023-07-08: Update driver version to 9.009.02.
 - 2023-07-08: Initial commit, support for driver version 9.006.04.
