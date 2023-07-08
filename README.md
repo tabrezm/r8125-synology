@@ -41,9 +41,10 @@ $ chroot /toolkit/build_env/ds.avoton-7.2
 5. Download code:
 
 ```bash
-$ mkdir -p /usr/src/r8125
-$ cd /usr/src/r8125
+$ mkdir -p /usr/src
+$ cd /usr/src
 $ git clone https://github.com/tabrezm/r8125-synology
+$ cd r8125-synology/src
 ```
 
 If you're compiling for a different DSM version, you need to update `BASEDIR` in the makefile:
@@ -55,7 +56,6 @@ If you're compiling for a different DSM version, you need to update `BASEDIR` in
 6. Compile module:
 
 ```bash
-$ cd src
 $ make
 ```
 
