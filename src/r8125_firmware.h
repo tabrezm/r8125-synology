@@ -32,38 +32,37 @@
  *  US6,570,884, US6,115,776, and US6,327,625.
  ***********************************************************************************/
 
-#ifndef _LINUX_rtl8125_RSS_H
-#define _LINUX_rtl8125_RSS_H
+#ifndef _LINUX_rtl8125_FIRMWARE_H
+#define _LINUX_rtl8125_FIRMWARE_H
 
-#include <linux/netdevice.h>
-#include <linux/types.h>
-
-#define RTL8125_RSS_KEY_SIZE     40  /* size of RSS Hash Key in bytes */
-#define RTL8125_MAX_INDIRECTION_TABLE_ENTRIES 128
-
-enum rtl8125_rss_flag {
-        RTL_8125_RSS_FLAG_HASH_UDP_IPV4  = (1 << 0),
-        RTL_8125_RSS_FLAG_HASH_UDP_IPV6  = (1 << 1),
-};
+#include <linux/device.h>
+#include <linux/firmware.h>
 
 struct rtl8125_private;
+typedef void (*rtl8125_fw_write_t)(struct rtl8125_private *tp, u16 reg, u16 val);
+typedef u32 (*rtl8125_fw_read_t)(struct rtl8125_private *tp, u16 reg);
 
-int rtl8125_get_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd,
-                      u32 *rule_locs);
-int rtl8125_set_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd);
-u32 rtl8125_get_rxfh_key_size(struct net_device *netdev);
-u32 rtl8125_rss_indir_size(struct net_device *netdev);
-int rtl8125_get_rxfh(struct net_device *netdev, u32 *indir, u8 *key,
-                     u8 *hfunc);
-int rtl8125_set_rxfh(struct net_device *netdev, const u32 *indir,
-                     const u8 *key, const u8 hfunc);
-void rtl8125_rx_hash(struct rtl8125_private *tp,
-                     struct RxDescV3 *descv3,
-                     struct sk_buff *skb);
-void _rtl8125_config_rss(struct rtl8125_private *tp);
-void rtl8125_config_rss(struct rtl8125_private *tp);
-void rtl8125_init_rss(struct rtl8125_private *tp);
-u32 rtl8125_rss_indir_tbl_entries(struct rtl8125_private *tp);
-void rtl8125_disable_rss(struct rtl8125_private *tp);
+#define RTL8125_VER_SIZE		32
 
-#endif /* _LINUX_rtl8125_RSS_H */
+struct rtl8125_fw {
+        rtl8125_fw_write_t phy_write;
+        rtl8125_fw_read_t phy_read;
+        rtl8125_fw_write_t mac_mcu_write;
+        rtl8125_fw_read_t mac_mcu_read;
+        const struct firmware *fw;
+        const char *fw_name;
+        struct device *dev;
+
+        char version[RTL8125_VER_SIZE];
+
+        struct rtl8125_fw_phy_action {
+                __le32 *code;
+                size_t size;
+        } phy_action;
+};
+
+int rtl8125_fw_request_firmware(struct rtl8125_fw *rtl_fw);
+void rtl8125_fw_release_firmware(struct rtl8125_fw *rtl_fw);
+void rtl8125_fw_write_firmware(struct rtl8125_private *tp, struct rtl8125_fw *rtl_fw);
+
+#endif /* _LINUX_rtl8125_FIRMWARE_H */
