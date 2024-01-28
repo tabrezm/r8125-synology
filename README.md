@@ -15,9 +15,14 @@ File an issue if you run into problems on other Synology DSM versions and platfo
 Steps below are based [this](https://help.synology.com/developer-guide/getting_started/prepare_environment.html) and [this](https://help.synology.com/developer-guide/compile_applications/compile_open_source_projects.html) docs.
 
 1. Create a suitable Linux environment (not your NAS!). I used a Ubuntu 22.04 LTS Docker image.
+```bash
+$ docker run --privileged -it ubuntu:22.04
+```
+
 2. Set up environment:
 
 ```bash
+$ apt-get update
 $ apt-get install git python3 python3-pip
 $ mkdir -p /toolkit
 $ cd /toolkit
@@ -30,6 +35,7 @@ $ git clone https://github.com/SynologyOpenSource/pkgscripts-ng
 $ cd /toolkit/pkgscripts-ng
 $ git checkout DSM7.2
 $ ./EnvDeploy -v 7.2 -p avoton # replace 'avoton' with your platform
+$ cp /etc/ssl/certs/ca-certificates.crt /toolkit/build_env/ds.avoton-7.2/etc/ssl/certs/ca-certificates.crt # replace 'ds.avoton-7.2' with your platform and version
 ```
 
 4. Chroot into environment:
